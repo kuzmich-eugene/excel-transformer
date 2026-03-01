@@ -1,3 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+@theme {
+  --color-brand-primary: oklch(55% 0.2 250);
+  --color-brand-primary-hover: oklch(48% 0.2 250);
+  --color-brand-surface: oklch(97% 0.01 250);
+  --color-brand-border: oklch(88% 0.04 250);
+
+  --color-status-error: oklch(50% 0.22 20);
+  --color-status-error-bg: oklch(97% 0.04 20);
+  --color-status-error-border: oklch(85% 0.08 20);
+
+  --color-status-success: oklch(50% 0.18 145);
+  --color-status-success-bg: oklch(97% 0.03 145);
+  --color-status-success-border: oklch(85% 0.07 145);
+
+  --color-status-warning: oklch(65% 0.18 85);
+  --color-status-warning-bg: oklch(97% 0.04 85);
+
+  --color-neutral-50: oklch(98% 0 0);
+  --color-neutral-100: oklch(95% 0 0);
+  --color-neutral-200: oklch(90% 0 0);
+  --color-neutral-400: oklch(70% 0 0);
+  --color-neutral-600: oklch(50% 0 0);
+  --color-neutral-800: oklch(25% 0 0);
+  --color-neutral-900: oklch(15% 0 0);
+}

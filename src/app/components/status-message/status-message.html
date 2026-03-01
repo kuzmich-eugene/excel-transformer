@@ -1,0 +1,76 @@
+@switch (state.status()) {
+  @case ('loading') {
+    <div
+      class="flex items-center gap-3 px-5 py-4 rounded-xl bg-brand-surface border border-brand-border text-neutral-800"
+      role="status"
+      aria-live="polite"
+      aria-label="Processing invoice"
+    >
+      <svg class="w-5 h-5 animate-spin text-brand-primary shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+      </svg>
+      <span class="text-sm font-medium">Processing your invoice…</span>
+    </div>
+  }
+
+  @case ('success') {
+    @let summary = state.processingSummary();
+    <div
+      class="px-5 py-4 rounded-xl border"
+      [class.bg-status-success-bg]="summary && summary.exportedRows > 0"
+      [class.border-status-success-border]="summary && summary.exportedRows > 0"
+      [class.bg-status-warning-bg]="summary && summary.exportedRows === 0"
+      [class.border-neutral-200]="summary && summary.exportedRows === 0"
+      role="status"
+      aria-live="polite"
+    >
+      @if (summary && summary.exportedRows > 0) {
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-status-success shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          <div>
+            <p class="text-sm font-semibold text-status-success">Download started</p>
+            <p class="text-sm text-neutral-600 mt-0.5">
+              {{ summary.exportedRows }} {{ summary.exportedRows === 1 ? 'row' : 'rows' }} exported
+              @if (summary.skippedRows > 0) {
+                — {{ summary.skippedRows }} skipped (empty EAN)
+              }
+            </p>
+          </div>
+        </div>
+      } @else {
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-status-warning shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+          </svg>
+          <div>
+            <p class="text-sm font-semibold text-neutral-800">No rows exported</p>
+            <p class="text-sm text-neutral-600 mt-0.5">All EAN codes were empty — the ZIP contains header-only sheets.</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('error') {
+    <div
+      class="px-5 py-4 rounded-xl bg-status-error-bg border border-status-error-border"
+      role="alert"
+      aria-live="assertive"
+    >
+      <div class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-status-error shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-status-error">Error</p>
+          <p class="text-sm text-neutral-700 mt-0.5">{{ state.errorMessage() }}</p>
+          <p class="text-xs text-neutral-500 mt-2">Try uploading a different file.</p>
+        </div>
+      </div>
+    </div>
+  }
+}

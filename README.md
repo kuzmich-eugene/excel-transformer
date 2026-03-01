@@ -1,59 +1,77 @@
-# ExcelTransformer
+# Invoice Excel Converter
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+A pure-browser Angular 21 single-page application that converts wholesale `.xls` invoice
+files into three formatted Excel exports, packaged as a ZIP archive — no server required.
 
-## Development server
+## What It Does
 
-To start a local development server, run:
+Upload a wholesale invoice `.xls` file containing a **"Спецификация"** sheet. The app:
 
-```bash
-ng serve
-```
+1. Validates the file format and required columns
+2. Calculates retail prices (`Цена × 7.85`, rounded to nearest whole number)
+3. Converts product names to Title Case
+4. Generates and auto-downloads a ZIP archive containing:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+| File | Sheet | Contents |
+|------|-------|---------|
+| `basic-catalog.xlsx` | Лист1 | EAN, name, retail price, size, euro size, color, article |
+| `extended-catalog.xlsx` | Лист1 | All above + string article, barcode, description |
+| `batumi-receipt.xlsx` | ნიმუში | EAN, quantity, purchase price |
 
-## Code scaffolding
+## Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js 20 or 22 LTS
+- npm 10+
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Setup
 
 ```bash
-ng build
+git clone <repo-url> excel-transformer
+cd excel-transformer
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Running Locally
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Open `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+## Running Tests
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Runs all unit tests (services + accessibility) via Vitest.
 
-## Additional Resources
+## Building for Production
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run build
+```
+
+Output written to `dist/excel-transformer/browser/`. No server needed — deploy as static files.
+
+## Technical Details
+
+- **Framework**: Angular 21 (standalone components, signals, OnPush)
+- **Styling**: Tailwind CSS v4
+- **File I/O**: [SheetJS](https://sheetjs.com/) for `.xls` reading and `.xlsx` generation
+- **ZIP**: [JSZip](https://stuk.github.io/jszip/) for in-browser archive creation
+- **Testing**: Vitest + jest-axe (accessibility)
+
+## Input File Requirements
+
+The uploaded `.xls` file must contain a sheet named **"Спецификация"** with these columns:
+
+`Код ЕАН` · `Модель` · `Артикул` · `Наименование` · `Размер` · `Размер (евро)` · `Параметры` · `Кол-во` · `Цена`
+
+Rows with empty `Код ЕАН` are silently skipped.
+
+## Developer Guide
+
+See [`specs/002-invoice-excel-export/quickstart.md`](specs/002-invoice-excel-export/quickstart.md)
+for the full manual testing checklist and troubleshooting notes.
