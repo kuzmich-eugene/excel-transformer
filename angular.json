@@ -24,12 +24,8 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "allowedCommonJsDependencies": [
-              "jszip"
-            ]
+            "styles": ["src/styles.css"],
+            "allowedCommonJsDependencies": ["jszip"]
           },
           "configurations": {
             "production": {
@@ -69,6 +65,9 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
